@@ -1,0 +1,70 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- #
+from __future__ import unicode_literals
+
+# This file is only used if you use `make publish` or
+# explicitly specify it as your config file.
+
+import os
+import sys
+sys.path.append(os.curdir)
+from pelicanconf import *
+
+AUTHOR = u'Nelson Zhao'
+SITENAME = u'Nelson Zhao'
+SITEURL = 'http://www.nelsonzhao.com'
+RELATIVE_URLS = False
+PATH = 'content'
+
+TIMEZONE = 'Asia/Shanghai'
+
+DEFAULT_LANG = u'en'
+
+# Feed generation is usually not desired when developing
+FEED_ALL_ATOM = 'feeds/all.atom.xml'
+CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'
+
+DELETE_OUTPUT_DIRECTORY = False
+
+# Blogroll
+LINKS = (('My Douban', 'https://www.douban.com/people/zhaonaichuan/'),)
+
+# Social widget
+SOCIAL = (('envelope-o', 'mailto:zhaonaichuan@gmail.com'),
+          ('twitter', 'http://twitter.com/zhaonc'),
+          ('linkedin', 'http://www.linkedin.com/in/zhaonc'),
+          ('github', 'http://github.com/zhaonc'),
+          ('stack-overflow', 'http://stackoverflow.com/users/4624073/zhaonc'),)
+
+DEFAULT_PAGINATION = False
+
+# Uncomment following line if you want document-relative URLs when developing
+#RELATIVE_URLS = True
+
+# Theme
+THEME = 'themes/Flex'
+
+# Static resources
+# CNAME and avatar
+STATIC_PATHS = ['images', 'extra/CNAME']
+EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},
+                       'images/favicon.ico': {'path': 'favicon.ico'},}
+
+# Theme-specific (Flex) settings
+SITETITLE = u'Nelson Zhao'
+SITESUBTITLE = u'Financial Technology Developer'
+SITELOGO = SITEURL + '/images/avatar.jpg'
+SITEDESCRIPTION = u"Nelson Zhao's home page."
+COPYRIGHT_YEAR = 2016
+CC_LICENSE = {
+    'name': 'Creative Commons Attribution-ShareAlike',
+    'version': '4.0',
+    'slug': 'by-sa'
+}
+MAIN_MENU = True
+ROBOTS = 'index, follow'
+GOOGLE_ANALYTICS = 'UA-38771687-1'
+MENUITEMS = [('Archives', SITEURL + '/archives.html'),
+             ('Categories', SITEURL + '/categories.html'),
+             ('Tags', SITEURL + '/tags.html'), ]
+FAVICON = SITEURL + '/favicon.ico'
