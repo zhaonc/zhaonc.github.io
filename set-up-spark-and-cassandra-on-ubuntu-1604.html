@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="http://www.nelsonzhao.com/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://www.nelsonzhao.com/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://www.nelsonzhao.com/theme/font-awesome/css/font-awesome.min.css">
+
+
+    <link href="http://www.nelsonzhao.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Nelson Zhao Atom">
+
+
+    <link rel="shortcut icon" href="http://www.nelsonzhao.com/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="http://www.nelsonzhao.com/favicon.ico" type="image/x-icon">
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
+
+
+<meta name="author" content="Nelson Zhao" />
+<meta name="description" content="The following would walk through steps to compile and set up Spark and Cassandra on a single node server on Ubuntu 16.04. The following will be installed following the version compatibility matrix documented in Spark Cassandra Connector: Cassandra 3.0.9 Spark 2.0.0 Spark Cassandra Connector 2 ..." />
+<meta name="keywords" content="spark, cassandra, ubuntu">
+<meta property="og:site_name" content="Nelson Zhao"/>
+<meta property="og:title" content="Set up Spark and Cassandra on Ubuntu 16.04"/>
+<meta property="og:description" content="The following would walk through steps to compile and set up Spark and Cassandra on a single node server on Ubuntu 16.04. The following will be installed following the version compatibility matrix documented in Spark Cassandra Connector: Cassandra 3.0.9 Spark 2.0.0 Spark Cassandra Connector 2 ..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://www.nelsonzhao.com/set-up-spark-and-cassandra-on-ubuntu-1604.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-05-28 17:32:00+08:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://www.nelsonzhao.com/author/nelson-zhao.html">
+<meta property="article:section" content="Sysadmin"/>
+<meta property="article:tag" content="spark"/>
+<meta property="article:tag" content="cassandra"/>
+<meta property="article:tag" content="ubuntu"/>
+<meta property="og:image" content="http://www.nelsonzhao.com/images/avatar.jpg">
+
+  <title>Nelson Zhao &ndash; Set up Spark and Cassandra on Ubuntu 16.04</title>
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://www.nelsonzhao.com">
+        <img src="http://www.nelsonzhao.com/images/avatar.jpg" alt="Nelson Zhao" title="Nelson Zhao">
+      </a>
+      <h1><a href="http://www.nelsonzhao.com">Nelson Zhao</a></h1>
+
+<p>Financial Technology Developer</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://www.nelsonzhao.com/pages/about.html#about">About</a></li>
+          <li><a href="http://www.nelsonzhao.com/pages/contact.html#contact">Contact</a></li>
+
+          <li><a href="https://www.douban.com/people/zhaonaichuan/" target="_blank">My Douban</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-envelope-o" href="mailto:zhaonaichuan@gmail.com" target="_blank"><i class="fa fa-envelope-o"></i></a></li>
+        <li><a class="sc-twitter" href="http://twitter.com/zhaonc" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-linkedin" href="http://www.linkedin.com/in/zhaonc" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-github" href="http://github.com/zhaonc" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-stack-overflow" href="http://stackoverflow.com/users/4624073/zhaonc" target="_blank"><i class="fa fa-stack-overflow"></i></a></li>
+      </ul>
+    </div>
+  </aside>
+  <main>
+    <nav>
+      <a href="http://www.nelsonzhao.com">    Home
+</a>
+
+      <a href="http://www.nelsonzhao.com/archives.html">Archives</a>
+      <a href="http://www.nelsonzhao.com/categories.html">Categories</a>
+      <a href="http://www.nelsonzhao.com/tags.html">Tags</a>
+
+      <a href="http://www.nelsonzhao.com/feeds/all.atom.xml">    Atom
+</a>
+
+    </nav>
+
+<article>
+  <header>
+    <h1 id="set-up-spark-and-cassandra-on-ubuntu-1604">Set up Spark and Cassandra on Ubuntu 16.04</h1>
+    <p>
+          Posted on Sun 28 May 2017 in <a href="http://www.nelsonzhao.com/category/sysadmin.html">Sysadmin</a>
+
+
+    </p>
+  </header>
+  <div>
+    <p>The following would walk through steps to compile and set up Spark and Cassandra on a single node server on Ubuntu 16.04.</p>
+<p>The following will be installed following the version compatibility matrix documented in <a href="https://github.com/datastax/spark-cassandra-connector">Spark Cassandra Connector</a>:</p>
+<ul>
+<li>Cassandra 3.0.9</li>
+<li>Spark 2.0.0</li>
+<li>Spark Cassandra Connector 2.0.1</li>
+<li>Scala 2.10</li>
+</ul>
+<p>Start by creating a folder. This is optional but the following would assume the files are downloaded in this folder:</p>
+<div class="highlight"><pre><span></span>sudo mkdir -p /server
+sudo chown user:group /server
+cd /server
+</pre></div>
+
+
+<p>Install <strong>JDK 8</strong>.</p>
+<div class="highlight"><pre><span></span>sudo apt-get update
+sudo apt-get install default-jdk
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+</pre></div>
+
+
+<p>Set default Java version to JDK 8 and confirm the current version.</p>
+<div class="highlight"><pre><span></span>sudo update-alternatives --config java
+java --version
+</pre></div>
+
+
+<p>Install <strong>python-support</strong> manually as it has been removed from APT repositories for Ubuntu 16. This is required by the Cassandra Debian installer. Find the link here: https://launchpad.net/ubuntu/xenial/amd64/python-support/1.0.15.</p>
+<div class="highlight"><pre><span></span>wget http://launchpadlibrarian.net/109052632/python-support_1.0.15_all.deb
+sudo dpkg -i python-support_1.0.15_all.deb
+</pre></div>
+
+
+<p>Install <strong>Cassandra</strong>. Find the link and details here: http://docs.datastax.com/en/cassandra/3.0/cassandra/install/installDeb.html. Optionally adding =3.0.9 suffix after cassandra-tools to install this specific version as currently dsc30 installs Cassandra 3.0.9. Otherwise you may have to specify CQL protocol version later when you are running tools like <strong>cqlsh</strong>.</p>
+<div class="highlight"><pre><span></span>echo &quot;deb http://debian.datastax.com/community stable main&quot; | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+curl -L https://debian.datastax.com/debian/repo_key | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install dsc30
+sudo apt-get install cassandra-tools=3.0.9
+</pre></div>
+
+
+<p>The above would start the service automatically by naming the server "Test Cluster". If you wish to change the name of the cluster:</p>
+<div class="highlight"><pre><span></span>sudo service cassandra stop
+sudo rm -rf /var/lib/cassandra/data/system/*
+</pre></div>
+
+
+<p>Note with Cassandra 3.0.9 it is not as easy to modify your Cassandra cluster name in the system table and cassandra.yaml file because of <a href="https://issues.apache.org/jira/browse/CASSANDRA-13410">this bug</a>.</p>
+<p>At this point you may also want to set up the Cassandra server so that the external clients and other nodes could connect to this server. Edit <strong>/etc/cassandra/cassandra.yaml</strong> and update <em>listen_address</em> and <em>rpc_address</em> (or interface options) to addresses on which Cassandra would listen for connections from peer nodes and clients. Run <strong>sudo service cassandra restart</strong> to restart the service.</p>
+<p>Install <strong>Scala</strong> 2.10. Find the link here: https://www.scala-lang.org/download/2.10.6.html.</p>
+<div class="highlight"><pre><span></span>wget https://downloads.lightbend.com/scala/2.10.6/scala-2.10.6.deb
+sudo dpkg -i scala-2.10.6.deb
+</pre></div>
+
+
+<p>The above may encounter unmet libjansi-java dependency error. Run the following to fix it.</p>
+<div class="highlight"><pre><span></span>sudo apt-get install -f
+</pre></div>
+
+
+<p>Install <strong>sbt</strong>. Find the link here: https://bintray.com/sbt/debian/sbt/0.13.15.3#files.</p>
+<div class="highlight"><pre><span></span>wget https://dl.bintray.com/sbt/debian/sbt-0.13.15.3.deb
+sudo dpkg -i sbt-0.13.15.3.deb
+</pre></div>
+
+
+<p>Download source and compile <strong>Spark</strong> against Scala 2.10. Find the link here: https://spark.apache.org/downloads.html. Move folder to ./spark.</p>
+<div class="highlight"><pre><span></span>wget https://d3kbcqa49mib13.cloudfront.net/spark-2.0.0.tgz
+tar -xzf spark-2.0.0.tgz
+mv ./spark-2.0.0 ./spark
+</pre></div>
+
+
+<p>Compile Spark against Scala 2.10. See details here: https://spark.apache.org/docs/latest/building-spark.html. This may take approximately 20 minutes.</p>
+<div class="highlight"><pre><span></span>./dev/change-scala-version.sh 2.10
+./build/mvn -Pyarn -Phadoop-2.4 -Dscala-2.10 -DskipTests clean package
+cp -R /server/spark/assembly/target/scala-2.10/jars /server/spark
+</pre></div>
+
+
+<p>Download and compile Spark Cassandra Connector. This may also take a long time.</p>
+<div class="highlight"><pre><span></span>git clone https://github.com/datastax/spark-cassandra-connector.git
+cd ./spark-cassandra-connector
+git checkout tags/v2.0.1
+./sbt/sbt assembly -Dscala-2.10=true
+</pre></div>
+
+
+<p>If you are experiencing any issue at this point, try cleaning the <strong>Maven</strong> folder <strong>rm -rf ~/.m2</strong> and try again.</p>
+<p>Move the compiled connector to Spark.</p>
+<div class="highlight"><pre><span></span>find . -iname &quot;*.jar&quot; -type f -exec /bin/cp {} /server/spark/jars/ \;
+</pre></div>
+
+
+<p>Once all the above is done, you may try starting your master, slave, and shell to test. Note you may have to change the Cassandra address to your previously set <em>listen_address</em> in <em>cassandra.yaml</em>.</p>
+<div class="highlight"><pre><span></span>/server/spark/sbin/start-master.sh --host 0.0.0.0
+/server/spark/sbin/start-slave.sh --host 0.0.0.0 spark://localhost:7077
+/server/spark/bin/spark-shell --conf spark.cassandra.connection.host=127.0.0.1 --packages datastax:spark-cassandra-connector:2.0.1-s_2.10
+</pre></div>
+
+
+<p>You may try the <a href="https://github.com/datastax/spark-cassandra-connector/blob/master/doc/0_quick_start.md">examples</a> to see if it works.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://www.nelsonzhao.com/tag/spark.html">spark</a>
+      <a href="http://www.nelsonzhao.com/tag/cassandra.html">cassandra</a>
+      <a href="http://www.nelsonzhao.com/tag/ubuntu.html">ubuntu</a>
+    </p>
+  </div>
+
+
+
+</article>
+
+    <footer>
+<p>
+  &copy; Nelson Zhao 2016 - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>
+</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses/by-sa/4.0/"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+         src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p>    </footer>
+  </main>
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38771687-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Nelson Zhao ",
+  "url" : "http://www.nelsonzhao.com",
+  "image": "http://www.nelsonzhao.com/images/avatar.jpg",
+  "description": "Nelson Zhao's home page."
+}
+</script>
+</body>
+</html>

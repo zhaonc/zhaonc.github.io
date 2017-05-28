@@ -1,5 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Nelson Zhao</title><link href="http://www.nelsonzhao.com/" rel="alternate"></link><link href="http://www.nelsonzhao.com/feeds/all.atom.xml" rel="self"></link><id>http://www.nelsonzhao.com/</id><updated>2017-03-12T11:05:00+08:00</updated><entry><title>Securing VNC Server on Ubuntu 16.04</title><link href="http://www.nelsonzhao.com/securing-vnc-server-on-ubuntu-1604.html" rel="alternate"></link><published>2017-03-12T11:05:00+08:00</published><updated>2017-03-12T11:05:00+08:00</updated><author><name>Nelson Zhao</name></author><id>tag:www.nelsonzhao.com,2017-03-12:securing-vnc-server-on-ubuntu-1604.html</id><summary type="html">&lt;h2&gt;VNC Server: Benefits and Risks&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Nelson Zhao</title><link href="http://www.nelsonzhao.com/" rel="alternate"></link><link href="http://www.nelsonzhao.com/feeds/all.atom.xml" rel="self"></link><id>http://www.nelsonzhao.com/</id><updated>2017-05-28T17:32:00+08:00</updated><entry><title>Set up Spark and Cassandra on Ubuntu 16.04</title><link href="http://www.nelsonzhao.com/set-up-spark-and-cassandra-on-ubuntu-1604.html" rel="alternate"></link><published>2017-05-28T17:32:00+08:00</published><updated>2017-05-28T17:32:00+08:00</updated><author><name>Nelson Zhao</name></author><id>tag:www.nelsonzhao.com,2017-05-28:set-up-spark-and-cassandra-on-ubuntu-1604.html</id><summary type="html">&lt;p&gt;The following would walk through steps to compile and set up Spark and Cassandra on a single node server on Ubuntu 16.04.&lt;/p&gt;
+&lt;p&gt;The following will be installed following the version compatibility matrix documented in &lt;a href="https://github.com/datastax/spark-cassandra-connector"&gt;Spark Cassandra Connector&lt;/a&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Cassandra 3.0.9&lt;/li&gt;
+&lt;li&gt;Spark 2.0.0&lt;/li&gt;
+&lt;li&gt;Spark Cassandra Connector 2.0.1&lt;/li&gt;
+&lt;li&gt;Scala 2.10&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Start by creating a folder. This is optional but the following would assume the files are downloaded in this folder:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo mkdir -p /server
+sudo chown user:group /server
+cd /server
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Install &lt;strong&gt;JDK 8&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get update
+sudo apt-get install default-jdk
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Set default Java version to JDK 8 and confirm the current version.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo update-alternatives --config java
+java --version
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Install &lt;strong&gt;python-support&lt;/strong&gt; manually as it has been removed from APT repositories for Ubuntu 16. This is required by the Cassandra Debian installer. Find the link here: https://launchpad.net/ubuntu/xenial/amd64/python-support/1.0.15.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;wget http://launchpadlibrarian.net/109052632/python-support_1.0.15_all.deb
+sudo dpkg -i python-support_1.0.15_all.deb
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Install &lt;strong&gt;Cassandra&lt;/strong&gt;. Find the link and details here: http://docs.datastax.com/en/cassandra/3.0/cassandra/install/installDeb.html. Optionally adding =3.0.9 suffix after cassandra-tools to install this specific version as currently dsc30 installs Cassandra 3.0.9. Otherwise you may have to specify CQL protocol version later when you are running tools like &lt;strong&gt;cqlsh&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;echo &amp;quot;deb http://debian.datastax.com/community stable main&amp;quot; | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+curl -L https://debian.datastax.com/debian/repo_key | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install dsc30
+sudo apt-get install cassandra-tools=3.0.9
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The above would start the service automatically by naming the server "Test Cluster". If you wish to change the name of the cluster:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo service cassandra stop
+sudo rm -rf /var/lib/cassandra/data/system/*
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Note with Cassandra 3.0.9 it is not as easy to modify your Cassandra cluster name in the system table and cassandra.yaml file because of &lt;a href="https://issues.apache.org/jira/browse/CASSANDRA-13410"&gt;this bug&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;At this point you may also want to set up the Cassandra server so that the external clients and other nodes could connect to this server. Edit &lt;strong&gt;/etc/cassandra/cassandra.yaml&lt;/strong&gt; and update &lt;em&gt;listen_address&lt;/em&gt; and &lt;em&gt;rpc_address&lt;/em&gt; (or interface options) to addresses on which Cassandra would listen for connections from peer nodes and clients. Run &lt;strong&gt;sudo service cassandra restart&lt;/strong&gt; to restart the service.&lt;/p&gt;
+&lt;p&gt;Install &lt;strong&gt;Scala&lt;/strong&gt; 2.10. Find the link here: https://www.scala-lang.org/download/2.10.6.html.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;wget https://downloads.lightbend.com/scala/2.10.6/scala-2.10.6.deb
+sudo dpkg -i scala-2.10.6.deb
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The above may encounter unmet libjansi-java dependency error. Run the following to fix it.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get install -f
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Install &lt;strong&gt;sbt&lt;/strong&gt;. Find the link here: https://bintray.com/sbt/debian/sbt/0.13.15.3#files.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;wget https://dl.bintray.com/sbt/debian/sbt-0.13.15.3.deb
+sudo dpkg -i sbt-0.13.15.3.deb
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Download source and compile &lt;strong&gt;Spark&lt;/strong&gt; against Scala 2.10. Find the link here: https://spark.apache.org/downloads.html. Move folder to ./spark.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;wget https://d3kbcqa49mib13.cloudfront.net/spark-2.0.0.tgz
+tar -xzf spark-2.0.0.tgz
+mv ./spark-2.0.0 ./spark
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Compile Spark against Scala 2.10. See details here: https://spark.apache.org/docs/latest/building-spark.html. This may take approximately 20 minutes.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;./dev/change-scala-version.sh 2.10
+./build/mvn -Pyarn -Phadoop-2.4 -Dscala-2.10 -DskipTests clean package
+cp -R /server/spark/assembly/target/scala-2.10/jars /server/spark
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Download and compile Spark Cassandra Connector. This may also take a long time.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git clone https://github.com/datastax/spark-cassandra-connector.git
+cd ./spark-cassandra-connector
+git checkout tags/v2.0.1
+./sbt/sbt assembly -Dscala-2.10=true
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If you are experiencing any issue at this point, try cleaning the &lt;strong&gt;Maven&lt;/strong&gt; folder &lt;strong&gt;rm -rf ~/.m2&lt;/strong&gt; and try again.&lt;/p&gt;
+&lt;p&gt;Move the compiled connector to Spark.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;find . -iname &amp;quot;*.jar&amp;quot; -type f -exec /bin/cp {} /server/spark/jars/ \;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Once all the above is done, you may try starting your master, slave, and shell to test. Note you may have to change the Cassandra address to your previously set &lt;em&gt;listen_address&lt;/em&gt; in &lt;em&gt;cassandra.yaml&lt;/em&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;/server/spark/sbin/start-master.sh --host 0.0.0.0
+/server/spark/sbin/start-slave.sh --host 0.0.0.0 spark://localhost:7077
+/server/spark/bin/spark-shell --conf spark.cassandra.connection.host=127.0.0.1 --packages datastax:spark-cassandra-connector:2.0.1-s_2.10
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You may try the &lt;a href="https://github.com/datastax/spark-cassandra-connector/blob/master/doc/0_quick_start.md"&gt;examples&lt;/a&gt; to see if it works.&lt;/p&gt;</summary><category term="spark"></category><category term="cassandra"></category><category term="ubuntu"></category></entry><entry><title>Securing VNC Server on Ubuntu 16.04</title><link href="http://www.nelsonzhao.com/securing-vnc-server-on-ubuntu-1604.html" rel="alternate"></link><published>2017-03-12T11:05:00+08:00</published><updated>2017-03-12T11:05:00+08:00</updated><author><name>Nelson Zhao</name></author><id>tag:www.nelsonzhao.com,2017-03-12:securing-vnc-server-on-ubuntu-1604.html</id><summary type="html">&lt;h2&gt;VNC Server: Benefits and Risks&lt;/h2&gt;
 &lt;p&gt;VNC is a powerful remote administrative tool that provides Remote Desktop access to headless servers. It is particularly useful when certain applications on the server require a GUI environment (including &lt;a href="https://www.interactivebrokers.com.hk/en/index.php?f=1325"&gt;Interactive Brokers softwares&lt;/a&gt;). However VNC is known for its lack of security for remote access. Attackers scan for common ports looking for weak passwords.&lt;/p&gt;
 &lt;p&gt;Taking a commonly used free VNC server &lt;a href="http://www.tightvnc.com/"&gt;TightVNC&lt;/a&gt; as example, it authenticates connection against its passphrase in &lt;code&gt;~/.vnc/passwd&lt;/code&gt;, and when the number of unauthenticated connection attempts exceeds the threshold, the server may complain "too many authentication failures". When this happens, it may also block normal user from logging in. See discussion on this on &lt;a href="https://superuser.com/questions/437354/vncserver-too-many-security-failures"&gt;this thread&lt;/a&gt; and &lt;a href="https://superuser.com/questions/438024/vnc-authentication-failure"&gt;this thread&lt;/a&gt;.&lt;/p&gt;
 &lt;h2&gt;SSH Tunneling&lt;/h2&gt;
