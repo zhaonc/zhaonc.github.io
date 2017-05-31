@@ -131,7 +131,7 @@ $ sudo iptables -A LOG_DROP -j DROP
 &lt;p&gt;Then explicitly allow local connection to port 5901 (change depending on the actual VNC port) and drop the rest:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo iptables -A INPUT -s 127.0.0.0/8 -p tcp -m tcp --dport &lt;span class="m"&gt;5901&lt;/span&gt; -j ACCEPT
 $ sudo iptables -A INPUT -s 192.168.0.0/16 -p tcp -m tcp --dport &lt;span class="m"&gt;5901&lt;/span&gt; -j ACCEPT
-$ sudo iptables -A INPUT -p tcp -m tcp --dport &lt;span class="m"&gt;5901&lt;/span&gt; -j LOG_AND_DROP
+$ sudo iptables -A INPUT -p tcp -m tcp --dport &lt;span class="m"&gt;5901&lt;/span&gt; -j LOG_DROP
 &lt;/pre&gt;&lt;/div&gt;
 
 
