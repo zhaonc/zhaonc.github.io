@@ -46,7 +46,7 @@ Then explicitly allow local connection to port 5901 (change depending on the act
 ```commandline
 $ sudo iptables -A INPUT -s 127.0.0.0/8 -p tcp -m tcp --dport 5901 -j ACCEPT
 $ sudo iptables -A INPUT -s 192.168.0.0/16 -p tcp -m tcp --dport 5901 -j ACCEPT
-$ sudo iptables -A INPUT -p tcp -m tcp --dport 5901 -j LOG_AND_DROP
+$ sudo iptables -A INPUT -p tcp -m tcp --dport 5901 -j LOG_DROP
 ```
 
 You will then be able to find the log entries in ```/var/log/syslog```.
