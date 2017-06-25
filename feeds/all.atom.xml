@@ -8,9 +8,9 @@
 &lt;li&gt;Scala 2.10&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Start by creating a folder. This is optional but the following would assume the files are downloaded in this folder:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo mkdir -p /server
-sudo chown user:group /server
-cd /server
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo mkdir -p /srv
+sudo chown user:group /srv
+cd /srv
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -77,9 +77,10 @@ mv ./spark-2.0.0 ./spark
 
 
 &lt;p&gt;Compile Spark against Scala 2.10. See details here: https://spark.apache.org/docs/latest/building-spark.html. This may take approximately 20 minutes.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;./dev/change-scala-version.sh 2.10
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;cd ./spark
+./dev/change-scala-version.sh 2.10
 ./build/mvn -Pyarn -Phadoop-2.4 -Dscala-2.10 -DskipTests clean package
-cp -R /server/spark/assembly/target/scala-2.10/jars /server/spark
+cp -R /srv/spark/assembly/target/scala-2.10/jars /srv/spark
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -93,14 +94,14 @@ git checkout tags/v2.0.1
 
 &lt;p&gt;If you are experiencing any issue at this point, try cleaning the &lt;strong&gt;Maven&lt;/strong&gt; folder &lt;strong&gt;rm -rf ~/.m2&lt;/strong&gt; and try again.&lt;/p&gt;
 &lt;p&gt;Move the compiled connector to Spark.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;find . -iname &amp;quot;*.jar&amp;quot; -type f -exec /bin/cp {} /server/spark/jars/ \;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;find . -iname &amp;quot;*.jar&amp;quot; -type f -exec /bin/cp {} /srv/spark/jars/ \;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Once all the above is done, you may try starting your master, slave, and shell to test. Note you may have to change the Cassandra address to your previously set &lt;em&gt;listen_address&lt;/em&gt; in &lt;em&gt;cassandra.yaml&lt;/em&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;/server/spark/sbin/start-master.sh --host 0.0.0.0
-/server/spark/sbin/start-slave.sh --host 0.0.0.0 spark://localhost:7077
-/server/spark/bin/spark-shell --conf spark.cassandra.connection.host=127.0.0.1 --packages datastax:spark-cassandra-connector:2.0.1-s_2.10
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;/srv/spark/sbin/start-master.sh --host 0.0.0.0
+/srv/spark/sbin/start-slave.sh --host 0.0.0.0 spark://localhost:7077
+/srv/spark/bin/spark-shell --conf spark.cassandra.connection.host=127.0.0.1 --packages datastax:spark-cassandra-connector:2.0.1-s_2.10
 &lt;/pre&gt;&lt;/div&gt;
 
 
