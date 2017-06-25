@@ -15,9 +15,9 @@ The following will be installed following the version compatibility matrix docum
 Start by creating a folder. This is optional but the following would assume the files are downloaded in this folder:
 
 ```commandline
-sudo mkdir -p /server
-sudo chown user:group /server
-cd /server
+sudo mkdir -p /srv
+sudo chown user:group /srv
+cd /srv
 ```
 
 Install __JDK 8__.
@@ -96,9 +96,10 @@ mv ./spark-2.0.0 ./spark
 Compile Spark against Scala 2.10. See details here: https://spark.apache.org/docs/latest/building-spark.html. This may take approximately 20 minutes.
 
 ```commandline
+cd ./spark
 ./dev/change-scala-version.sh 2.10
 ./build/mvn -Pyarn -Phadoop-2.4 -Dscala-2.10 -DskipTests clean package
-cp -R /server/spark/assembly/target/scala-2.10/jars /server/spark
+cp -R /srv/spark/assembly/target/scala-2.10/jars /srv/spark
 ```
 
 Download and compile Spark Cassandra Connector. This may also take a long time.
@@ -115,15 +116,15 @@ If you are experiencing any issue at this point, try cleaning the __Maven__ fold
 Move the compiled connector to Spark.
 
 ```commandline
-find . -iname "*.jar" -type f -exec /bin/cp {} /server/spark/jars/ \;
+find . -iname "*.jar" -type f -exec /bin/cp {} /srv/spark/jars/ \;
 ```
 
 Once all the above is done, you may try starting your master, slave, and shell to test. Note you may have to change the Cassandra address to your previously set *listen_address* in *cassandra.yaml*.
 
 ```commandline
-/server/spark/sbin/start-master.sh --host 0.0.0.0
-/server/spark/sbin/start-slave.sh --host 0.0.0.0 spark://localhost:7077
-/server/spark/bin/spark-shell --conf spark.cassandra.connection.host=127.0.0.1 --packages datastax:spark-cassandra-connector:2.0.1-s_2.10
+/srv/spark/sbin/start-master.sh --host 0.0.0.0
+/srv/spark/sbin/start-slave.sh --host 0.0.0.0 spark://localhost:7077
+/srv/spark/bin/spark-shell --conf spark.cassandra.connection.host=127.0.0.1 --packages datastax:spark-cassandra-connector:2.0.1-s_2.10
 ```
 
 You may try the [examples](https://github.com/datastax/spark-cassandra-connector/blob/master/doc/0_quick_start.md) to see if it works.
