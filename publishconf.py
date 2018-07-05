@@ -27,14 +27,18 @@ CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'
 DELETE_OUTPUT_DIRECTORY = False
 
 # Blogroll
-LINKS = (('My Douban', 'https://www.douban.com/people/zhaonaichuan/'),)
+#LINKS = (('My Douban', 'https://www.douban.com/people/zhaonaichuan/'),)
 
 # Social widget
-SOCIAL = (('envelope-o', 'mailto:zhaonaichuan@gmail.com'),
+SOCIAL = (('envelope-o', 'mailto:zhaonaichuan+com@gmail.com'),
           ('twitter', 'http://twitter.com/zhaonc'),
           ('linkedin', 'http://www.linkedin.com/in/zhaonc'),
-          ('github', 'http://github.com/zhaonc'),
-          ('stack-overflow', 'http://stackoverflow.com/users/4624073/zhaonc'),)
+          ('github', 'http://github.com/zhaonc'),)
+# SOCIAL = (('envelope-o', 'mailto:zhaonaichuan+com@gmail.com'),
+#           ('twitter', 'http://twitter.com/zhaonc'),
+#           ('linkedin', 'http://www.linkedin.com/in/zhaonc'),
+#           ('github', 'http://github.com/zhaonc'),
+#           ('stack-overflow', 'http://stackoverflow.com/users/4624073/zhaonc'),)
 
 DEFAULT_PAGINATION = False
 
@@ -54,7 +58,7 @@ EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},
 SITETITLE = u'Nelson Zhao'
 SITESUBTITLE = u'Financial Technology Developer'
 SITELOGO = SITEURL + '/images/avatar.jpg'
-SITEDESCRIPTION = u"Nelson Zhao's home page."
+SITEDESCRIPTION = u"Nelson's home page."
 COPYRIGHT_YEAR = 2016
 CC_LICENSE = {
     'name': 'Creative Commons Attribution-ShareAlike',
