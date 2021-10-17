@@ -1,20 +1,19 @@
 ---
-title: Optimal Selection of Passive Portfolios
+title: "Notes: Optimal Selection of Passive Portfolios"
 layout: post
 date: '2021-10-07 13:58:00 +0800'
 tags:
 - portfolio-construction
 categories:
-- Reading Notes
+- Notes
 ---
 * Rudd, Andrew. “Optimal Selection of Passive Portfolios.” Financial Management 9, no. 1 (1980): 57–66. [https://doi.org/10.2307/3665314](https://doi.org/10.2307/3665314).
 * URL: [https://www.jstor.org/stable/3665314](https://www.jstor.org/stable/3665314)
 * DOI: [10.2307/3665314](https://doi.org/10.2307/3665314)
-* Topics: Finance
 
 ## Abstract
 
-The use of passive investment strategies, in particular index funds, has grown rapidly among institutional investors. The most frequent passive portfolio selection method is a stratification of the asset universe. This paper shows, however, that an optimization approach is a superior procedure for the efficient selection of index funds and other passive strategies.
+> The use of passive investment strategies, in particular index funds, has grown rapidly among institutional investors. The most frequent passive portfolio selection method is a stratification of the asset universe. This paper shows, however, that an optimization approach is a superior procedure for the efficient selection of index funds and other passive strategies.
 
 ## Notes
 
