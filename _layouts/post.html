@@ -15,13 +15,7 @@ layout: default
       {%- endif -%}
       {%- if page.categories -%}
         / {% for category in page.categories %}
-          <a href="{{site.baseurl}}/categories/#{{category|slugsize}}">{{category}}</a>
-          {% unless forloop.last %} {% endunless %}
-          {% endfor %}
-      {%- endif -%}
-      {%- if page.tags -%}
-        / {% for tag in page.tags %}
-          <a href="{{site.baseurl}}/tags/#{{tag|slugsize}}">#{{tag}}</a>
+          <a href="{{site.baseurl}}/categories/{{category|slugsize}}">{{category}}</a>
           {% unless forloop.last %} {% endunless %}
           {% endfor %}
       {%- endif -%}

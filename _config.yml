@@ -37,6 +37,8 @@ plugins:
   - jekyll-seo-tag
   - jekyll-paginate
   - jekyll-sitemap
+header_pages:
+  - categories.markdown
 
 # Exclude from processing.
 # The following items will not be processed, by default.
