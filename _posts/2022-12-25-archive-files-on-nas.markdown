@@ -2,8 +2,7 @@
 title: "Archive files on NAS"
 layout: post
 date: '2022-12-25 17:51:00 +0800'
-categories:
-- platform
+categories: platform
 excerpt: Use tar to archive large number of files
 ---
 
