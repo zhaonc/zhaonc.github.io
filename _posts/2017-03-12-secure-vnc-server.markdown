@@ -1,14 +1,13 @@
 ---
-title: Securing VNC Server on Ubuntu
+title: Secure VNC server
 layout: post
 date: '2017-03-12 11:05:00 +0800'
 tags:
+- linux
 - vnc
-- vpn
-- ssh
-- ubuntu
 categories:
-- Infrastructure
+- Notes
+excerpt: Secure VNC server with SSH and VPN
 ---
 
 VNC is a powerful remote administrative tool that provides Remote Desktop access to headless servers. It is particularly useful when certain applications on the server require a GUI environment (including [Interactive Brokers softwares](https://www.interactivebrokers.com.hk/en/index.php?f=1325)). However VNC is known for its lack of security for remote access. Attackers scan for common ports looking for weak passwords.
