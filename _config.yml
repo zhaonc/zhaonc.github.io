@@ -39,7 +39,6 @@ plugins:
   - jekyll-sitemap
 header_pages:
   - categories.markdown
-  - tags.markdown
 
 # Exclude from processing.
 # The following items will not be processed, by default.

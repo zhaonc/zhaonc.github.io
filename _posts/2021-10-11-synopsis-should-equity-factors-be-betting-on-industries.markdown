@@ -2,10 +2,8 @@
 title: "Synopsis: Should equity factors be betting on industries?"
 layout: post
 date: '2021-10-11 23:43:00 +0800'
-tags:
-- factor-investing
 categories:
-- Synopsis
+- quant
 excerpt: While industry neutralization is common, certain factors carry the predictive power of industry selection, as its active factor return comes from the desirable industry exposure.
 ---
 
