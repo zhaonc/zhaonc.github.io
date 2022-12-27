@@ -18,10 +18,10 @@ Archive files on a NAS onto another NAS so that I could migrate the filesystem t
 
 ## Solution
 
-Mount the destination host folder (via Samba) on a computer. Then on the computer run the following:
+Here we connect to another computer $PC running Linux. Also mounted the destination NAS to $DEST on the source NAS.
 
 ```bash
-echo $PASSWORD | ssh $SOURCE_HOST "sudo -S tar cf - -C $PATH ." | pv | pigz | cat > $DEST_HOST
+sudo tar cf - -C $PATH . | ssh $PC "pv | pigz" | cat > $DEST
 ```
 
 ## Discussion
@@ -31,4 +31,4 @@ echo $PASSWORD | ssh $SOURCE_HOST "sudo -S tar cf - -C $PATH ." | pv | pigz | ca
 - __why another computer__: While not necessary, running on the computer gives us `pv` which shows the progress, and `pigz` which utilizes all cores and avoids bottleneck on NAS's low-spec CPU
 - __Samba vs SSH__: In my experiments, Samba has been faster than SSH (or `rsync` daemon over SSH), potentially due to less overhead
 - __path__: `-C` would change the working directory, and therefore essentially "remove" this hierarchy (useful when extracted to a different directory later)
-- __why root__: `echo $PASSWORD` and `sudo -S` is to run with `root` to copy files owned by other users. To avoid storing password into shell history, simply insert a space before the command
+- __why root__: Run with `root` to copy files owned by other users
