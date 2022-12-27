@@ -16,19 +16,37 @@ Archive files on a NAS onto another NAS so that I could migrate the filesystem t
 - in this case there is no spare disks - therefore cannot use [dd](https://linuxhint.com/clone-disk-using-dd-linux/)
 - specifically in this case, the two Synology NAS hosts are both relatively slow, and certain packages such as `pv` are missing on their OS
 
-## Solution
-
-Here we connect to another computer $PC running Linux. Also mounted the destination NAS to $DEST on the source NAS.
+## First attempt: rsync over SSH and Samba
 
 ```bash
-sudo tar cf - -C $PATH . | ssh $PC "pv | pigz" | cat > $DEST
+# On source NAS
+sudo rsync -avh $PATH $NAS:/$DEST
 ```
 
-## Discussion
+`rsync` is handy here because it persists the attributes and ownership, and it could resume if transmission is interrupted. Note in modern version of `rsync` we could also do `--info=progress2` for aggregated information on progress, however this is not supported on my NAS. Also running this with `root` privileges because there were files owned by other users.
 
-- __rsync vs tar__: Given we have large number of files, `tar` has proven to be much faster than using `rsync` between the NAS boxes, while it keeps attributes and ownership
-- __compression__: In my case, the destination NAS is slower and it struggled to keep up. Therefore compression removes this bottleneck
-- __why another computer__: While not necessary, running on the computer gives us `pv` which shows the progress, and `pigz` which utilizes all cores and avoids bottleneck on NAS's low-spec CPU
-- __Samba vs SSH__: In my experiments, Samba has been faster than SSH (or `rsync` daemon over SSH), potentially due to less overhead
-- __path__: `-C` would change the working directory, and therefore essentially "remove" this hierarchy (useful when extracted to a different directory later)
-- __why root__: Run with `root` to copy files owned by other users
+When I tested this, it is unfortunately slow (it was so slow that I didn't even have to benchmark it). Thinking this may be due to the SSH overhead, I switched over to Samba. First mounted the destination to the source NAS `$DEST`, then with a small change in path: `sudo rsync -avh $PATH $DEST`. This resulted in a much better throughput.
+
+Can we do better?
+
+1. How can we get overall idea of the progress? 3TB takes at least 6.8 hours to complete theoretcally.
+2. Technically we are doing an one-time dump. We will not be "synchronizing" them. Therefore the "incremental" benefit of `rsync` is not relevant here.
+3. Can we also compress to achieve an even better throughput? Compression over `rsync` is not ideal because it operates on a per file basis and we have huge number of files.
+
+## Second attempt: tar
+
+```bash
+# On source NAS
+sudo tar -vczf - -C $PATH . > $DEST
+```
+
+Here `tar` places all the files into one archive and compresses with `gzip`. However very quickly I realized the weak CPU on the source NAS now becomes the bottleneck. Also the verbose mode in tar is not very helpful as it only lists out the files it is touching. Ideally we want to show how much data has been processed so far.
+
+## Final solution
+
+```bash
+# On another PC
+sudo tar cf - -C $PATH . | ssh $PC "pv | pigz > $DEST"
+```
+
+Here we work around the NAS CPU bottleneck by using a third PC, which also enables us to use `pv` to show progress and `pigz` to utilize all cores in compressing. Note here the destination NAS was mounted to `$DEST`. Given the full duplex Gigabit ethernet, we _could_ spare the extra mounting and pipe the data via the source NAS, without seeing much sacrifice in throughput.
