@@ -49,4 +49,4 @@ Here `tar` places all the files into one archive and compresses with `gzip`. How
 sudo tar cf - -C $PATH . | ssh $PC "pv | pigz > $DEST"
 ```
 
-Here we work around the NAS CPU bottleneck by using a third PC, which also enables us to use `pv` to show progress and `pigz` to utilize all cores in compressing. Note here the destination NAS was mounted to `$DEST`. Given the full duplex Gigabit ethernet, we _could_ spare the extra mounting and pipe the data via the source NAS, without seeing much sacrifice in throughput.
+Here we work around the NAS CPU bottleneck by using a third PC, which also enables us to use `pv` to show progress and `pigz` to utilize all cores in compressing. Note here the destination NAS was mounted to `$DEST`.
