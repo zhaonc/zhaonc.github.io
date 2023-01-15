@@ -46,7 +46,7 @@ Here `tar` places all the files into one archive and compresses with `gzip`. How
 
 ```bash
 # On another PC
-sudo tar cf - -C $PATH . | ssh $PC "pv --force | pigz > $DEST"
+sudo tar cf - -C $PATH . | ssh $PC "pv --force | pigz" > $DEST
 ```
 
 Here we work around the NAS CPU bottleneck by using a third PC, which also enables us to use `pv` to show progress and `pigz` to utilize all cores in compressing. Note here the destination NAS was mounted to `$DEST`. Also `--force` is required here as "pv will not output any visual display if standard error is not a terminal"[^1].
