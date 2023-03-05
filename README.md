@@ -8,7 +8,7 @@
 - Install bundler with `gem install bundler`
 - Install dependencies with `bundle install`
 
-To preview, run `gem install bundler`.
+To preview, run `bundle exec jekyll serve`.
 
 ## Publish
 

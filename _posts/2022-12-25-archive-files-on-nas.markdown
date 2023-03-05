@@ -2,7 +2,7 @@
 title: "Archive files on NAS"
 layout: post
 date: '2022-12-25 17:51:00 +0800'
-categories: platform
+categories: devops
 excerpt: Use tar to archive large number of files
 ---
 
@@ -20,12 +20,12 @@ Archive files on a NAS onto another NAS so that I could migrate the filesystem t
 
 ```bash
 # On source NAS
-sudo rsync -avh $PATH $NAS:/$DEST
+sudo rsync -avh <source> <nas>:/<destination>
 ```
 
 `rsync` is handy here because it persists the attributes and ownership, and it could resume if transmission is interrupted. Note in modern version of `rsync` we could also do `--info=progress2` for aggregated information on progress, however this is not supported on my NAS. Also running this with `root` privileges because there were files owned by other users.
 
-When I tested this, it is unfortunately slow (it was so slow that I didn't even have to benchmark it). Thinking this may be due to the SSH overhead, I switched over to Samba. First mounted the destination to the source NAS `$DEST`, then with a small change in path: `sudo rsync -avh $PATH $DEST`. This resulted in a much better throughput.
+When I tested this, it is unfortunately slow (it was so slow that I didn't even have to benchmark it). Thinking this may be due to the SSH overhead, I switched over to Samba. First mounted the destination to the source NAS `[destination]`, then with a small change in path: `sudo rsync -avh [source] [destination]`. This resulted in a much better throughput.
 
 Can we do better?
 
@@ -37,7 +37,7 @@ Can we do better?
 
 ```bash
 # On source NAS
-sudo tar -vczf - -C $PATH . > $DEST
+sudo tar -vczf - -C [source] . > [destination]
 ```
 
 Here `tar` places all the files into one archive and compresses with `gzip`. However very quickly I realized the weak CPU on the source NAS now becomes the bottleneck. Also the verbose mode in tar is not very helpful as it only lists out the files it is touching. Ideally we want to show how much data has been processed so far.
@@ -46,9 +46,9 @@ Here `tar` places all the files into one archive and compresses with `gzip`. How
 
 ```bash
 # On another PC
-sudo tar cf - -C $PATH . | ssh $PC "pv --force | pigz" > $DEST
+sudo tar cf - -C [source] . | ssh [pc] "pv --force | pigz" > [destination]
 ```
 
-Here we work around the NAS CPU bottleneck by using a third PC, which also enables us to use `pv` to show progress and `pigz` to utilize all cores in compressing. Note here the destination NAS was mounted to `$DEST`. Also `--force` is required here as "pv will not output any visual display if standard error is not a terminal"[^1].
+Here we work around the NAS CPU bottleneck by using a third PC, which also enables us to use `pv` to show progress and `pigz` to utilize all cores in compressing. Note here the destination NAS was mounted to `<destination>`. Also `--force` is required here as "pv will not output any visual display if standard error is not a terminal"[^1].
 
 [^1]: [man pv](https://man7.org/linux/man-pages/man1/pv.1.html)

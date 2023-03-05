@@ -2,7 +2,7 @@
 title: Secure VNC server
 layout: post
 date: '2017-03-12 11:05:00 +0800'
-categories: platform
+categories: devops
 excerpt: Secure VNC server with SSH and VPN
 ---
 
