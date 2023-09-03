@@ -1,5 +1,5 @@
 ---
-title: "Archive files on NAS"
+title: "Migrate files between NAS"
 layout: post
 date: '2022-12-25 17:51:00 +0800'
 categories: devops
@@ -8,9 +8,9 @@ excerpt: Use tar to archive large number of files
 
 ## Goal
 
-Archive files on a NAS onto another NAS so that I could migrate the filesystem to [btrfs](https://www.synology.com/en-my/dsm/Btrfs). This means:
+Migrate a large number of files from a NAS onto another NAS, so that I could migrate the filesystem to [btrfs](https://www.synology.com/en-my/dsm/Btrfs). This means:
 
-- large number of files to be archived (perhaps in millions, e.g. project files), and large in total size (>3TB)
+- a large number of files need to be transferred (perhaps in millions, e.g. project files), and large in total size (>3TB)
 - need to keep file attributes and ownership
 - need to be safe but fast
 - in this case there is no spare disks - therefore cannot use [dd](https://linuxhint.com/clone-disk-using-dd-linux/)
