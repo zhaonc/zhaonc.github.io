@@ -2,7 +2,7 @@
 title: "Organize photos"
 layout: post
 date: '2022-11-08 00:13:00 +0800'
-categories: devops
+categories: setup
 excerpt: Update EXIF and modified date
 ---
 
