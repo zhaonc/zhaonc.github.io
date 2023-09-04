@@ -58,7 +58,16 @@ systemd(1)───sshd(9653)───sshd(3099)───sshd(3103)───dock
 With this issue, it is practically impossible to use Docker on Synology NAS, which surprising that I have not yet seen the issue widely reported - therefore I do suspect this may have been an isolated issue on my side.. Having submitted a support ticket to Synology, I have created a scheduled task to kill these processes on hourly basis:
 
 ```bash
-if pgrep "docker system dial-stdio"; then ps -ef | grep "docker system dial-stdio" | awk '{print $2}' | xargs kill -9; fi
+#!/bin/bash
+
+n=$(pgrep -f "docker system dial-stdio" | wc -l)
+
+if [ $n -gt 0 ]; then
+    ps -ef | grep "docker system dial-stdio" | grep -v grep | awk '{print $2}' | xargs kill -9
+    echo "Killed $n processes"
+else
+    echo "No process found"
+fi
 ```
 
 I will share more updates once I hear back from Synology support.
