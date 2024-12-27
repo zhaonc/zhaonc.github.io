@@ -1,5 +1,5 @@
 ---
-title: "Synopsis: Optimal selection of passive portfolios"
+title: "Reading Notes: Optimal selection of passive portfolios"
 layout: post
 date: '2021-10-07 13:58:00 +0800'
 categories:

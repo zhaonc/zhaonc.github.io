@@ -1,5 +1,5 @@
 ---
-title: "Synopsis: Should equity factors be betting on industries?"
+title: "Reading Notes: Should equity factors be betting on industries?"
 layout: post
 date: '2021-10-11 23:43:00 +0800'
 categories:

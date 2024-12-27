@@ -2,7 +2,7 @@
 title: "Unable to resolve CNAME domain in Home Assistant"
 layout: post
 date: '2023-09-02 15:00:00 +0800'
-categories: setup
+categories: devops
 excerpt: CNAME domain resolution issue
 ---
 
